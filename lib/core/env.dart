@@ -2,7 +2,7 @@
 class Env {
   static const baseUrl = String.fromEnvironment(
     'TAWASUL_BASE_URL',
-    defaultValue: 'https://tos.fiksutiliratkaisut.fi/1/tawasul-os/',
+    defaultValue: 'https://tos.fiksutiliratkaisut.fi/1/tawasul-os/modules/TawasulCore/api.php/v2',
   );
 
   /// Optional school API key, used only before anyone signs in. Pass it at
