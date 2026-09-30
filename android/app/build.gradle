@@ -1,0 +1,51 @@
+plugins {
+    id "com.android.application"
+    id "kotlin-android"
+    id "dev.flutter.flutter-gradle-plugin"
+}
+
+android {
+    namespace = "com.afhaam.tawasul_school_os"
+    compileSdk = flutter.compileSdkVersion
+    ndkVersion = flutter.ndkVersion
+
+    compileOptions {
+        sourceCompatibility = JavaVersion.VERSION_17
+        targetCompatibility = JavaVersion.VERSION_17
+    }
+
+    kotlinOptions {
+        jvmTarget = JavaVersion.VERSION_17
+    }
+
+    defaultConfig {
+        applicationId = "com.afhaam.tawasul_school_os"
+        minSdk = 23
+        targetSdk = flutter.targetSdkVersion
+        versionCode = flutter.versionCode
+        versionName = flutter.versionName
+    }
+
+    signingConfigs {
+        release {
+            def ksFile = rootProject.file("release.keystore")
+            if (ksFile.exists()) {
+                storeFile = ksFile
+                storePassword = System.getenv("KEYSTORE_PASSWORD") ?: "tawasul2026"
+                keyAlias = "tawasul"
+                keyPassword = System.getenv("KEYSTORE_PASSWORD") ?: "tawasul2026"
+            }
+        }
+    }
+
+    buildTypes {
+        release {
+            def ksFile = rootProject.file("release.keystore")
+            signingConfig = ksFile.exists() ? signingConfigs.release : signingConfigs.debug
+        }
+    }
+}
+
+flutter {
+    source = "../.."
+}

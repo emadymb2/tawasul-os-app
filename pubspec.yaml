@@ -1,0 +1,36 @@
+name: tawasul_school_os
+description: Offline-first Android consoles for Tawasul School OS powered by the school core.
+publish_to: "none"
+version: 1.0.0+1
+
+environment:
+  sdk: ">=3.5.0 <4.0.0"
+
+dependencies:
+  flutter:
+    sdk: flutter
+  flutter_localizations:
+    sdk: flutter
+  http: ^1.2.2
+  shared_preferences: ^2.3.2
+  connectivity_plus: ^6.1.4
+  pdfrx: ^1.1.0
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+  flutter_lints: ^4.0.0
+  flutter_launcher_icons: ^0.14.1
+
+flutter:
+  uses-material-design: true
+  assets:
+    - assets/icons/app_icon.png
+
+flutter_launcher_icons:
+  android: true
+  ios: false
+  image_path: assets/icons/app_icon.png
+  adaptive_icon_background: "#0D3A24"
+  adaptive_icon_foreground: assets/icons/app_icon.png
+  min_sdk_android: 23
