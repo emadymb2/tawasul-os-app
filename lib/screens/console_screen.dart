@@ -51,11 +51,25 @@ class _ConsoleScreenState extends State<ConsoleScreen> {
   String? _childId;
 
   AuthUser get _user => widget.session.user!;
+  DateTime? _lastBackPressTime;
 
   @override
   void initState() {
     super.initState();
     _load();
+  }
+
+  Future<bool> _onWillPop() async {
+    final now = DateTime.now();
+    if (_lastBackPressTime == null || now.difference(_lastBackPressTime!) > const Duration(seconds: 2)) {
+      _lastBackPressTime = now;
+      final strings = L10n.of(context);
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text(strings.pressBackAgain)),
+      );
+      return false;
+    }
+    return true;
   }
 
   Future<void> _load() async {
@@ -229,76 +243,79 @@ class _ConsoleScreenState extends State<ConsoleScreen> {
 
     return Directionality(
       textDirection: strings.direction,
-      child: Scaffold(
-        key: _scaffoldKey,
-        backgroundColor: AppColors.cream,
-        drawer: AccountDrawer(
-          session: widget.session,
-          repository: widget.repository,
-          portalTitle: _portalTitle(strings),
-          pages: [
-            for (final tab in menuTabs)
-              (tab.label, tab.icon, () => setState(() {
-                    _index = tab.index;
-                    _section = 0;
-                  })),
-          ],
-        ),
-        body: Column(
-          children: [
-            TawasulTopBar(
-              title: strings.appName,
-              subtitle: _portalTitle(strings),
-              onMenu: () => _scaffoldKey.currentState?.openDrawer(),
-            ),
-            if (snapshot != null)
-              OfflineRibbon(isOffline: snapshot.isOffline, pendingDrafts: snapshot.pendingDraftCount),
-            Expanded(
-              child: _loading
-                  ? Center(child: Text(strings.loading, style: const TextStyle(color: AppColors.muted)))
-                  : _error != null
-                      ? _ErrorView(message: strings.networkError, retryLabel: strings.retry, onRetry: _load)
-                      : RefreshIndicator(
-                          onRefresh: _load,
-                          child: SingleChildScrollView(
-                            physics: const AlwaysScrollableScrollPhysics(),
-                            padding: const EdgeInsets.only(bottom: 24),
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.stretch,
-                              children: [
-                                if (pageIndex == 0)
-                                  PageHeader(eyebrow: _portalEyebrow(strings), title: _portalTitle(strings)),
-                                _content(snapshot!, pageIndex),
-                              ],
+      child: WillPopScope(
+        onWillPop: _onWillPop,
+        child: Scaffold(
+          key: _scaffoldKey,
+          backgroundColor: AppColors.cream,
+          drawer: AccountDrawer(
+            session: widget.session,
+            repository: widget.repository,
+            portalTitle: _portalTitle(strings),
+            pages: [
+              for (final tab in menuTabs)
+                (tab.label, tab.icon, () => setState(() {
+                  _index = tab.index;
+                  _section = 0;
+                })),
+            ],
+          ),
+          body: Column(
+            children: [
+              TawasulTopBar(
+                title: strings.appName,
+                subtitle: _portalTitle(strings),
+                onMenu: () => _scaffoldKey.currentState?.openDrawer(),
+              ),
+              if (snapshot != null)
+                OfflineRibbon(isOffline: snapshot.isOffline, pendingDrafts: snapshot.pendingDraftCount),
+              Expanded(
+                child: _loading
+                    ? Center(child: Text(strings.loading, style: const TextStyle(color: AppColors.muted)))
+                    : _error != null
+                        ? _ErrorView(message: strings.networkError, retryLabel: strings.retry, onRetry: _load)
+                        : RefreshIndicator(
+                            onRefresh: _load,
+                            child: SingleChildScrollView(
+                              physics: const AlwaysScrollableScrollPhysics(),
+                              padding: const EdgeInsets.only(bottom: 24),
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.stretch,
+                                children: [
+                                  if (pageIndex == 0)
+                                    PageHeader(eyebrow: _portalEyebrow(strings), title: _portalTitle(strings)),
+                                  _content(snapshot!, pageIndex),
+                                ],
+                              ),
                             ),
                           ),
-                        ),
-            ),
-          ],
-        ),
-        bottomNavigationBar: tabs.length < 2 ? null : NavigationBarTheme(
-          data: NavigationBarThemeData(
-            backgroundColor: Colors.white,
-            indicatorColor: AppColors.gold,
-            labelTextStyle: WidgetStateProperty.resolveWith((states) => TextStyle(
-                  color: states.contains(WidgetState.selected) ? AppColors.pine : AppColors.muted,
-                  fontSize: 11,
-                  fontWeight: states.contains(WidgetState.selected) ? FontWeight.w800 : FontWeight.w600,
-                )),
-            iconTheme: WidgetStateProperty.resolveWith((states) => IconThemeData(
-                  color: states.contains(WidgetState.selected) ? AppColors.pine : AppColors.muted,
-                )),
+              ),
+            ],
           ),
-          child: NavigationBar(
-            height: 68,
-            selectedIndex: selected < 0 ? 0 : selected,
-            onDestinationSelected: (value) => setState(() {
-              _index = tabs[value].index;
-              _section = 0;
-            }),
-            destinations: tabs
-                .map((tab) => NavigationDestination(icon: Icon(tab.icon), label: tab.label))
-                .toList(),
+          bottomNavigationBar: tabs.length < 2 ? null : NavigationBarTheme(
+            data: NavigationBarThemeData(
+              backgroundColor: Colors.white,
+              indicatorColor: AppColors.gold,
+              labelTextStyle: WidgetStateProperty.resolveWith((states) => TextStyle(
+                    color: states.contains(WidgetState.selected) ? AppColors.pine : AppColors.muted,
+                    fontSize: 11,
+                    fontWeight: states.contains(WidgetState.selected) ? FontWeight.w800 : FontWeight.w600,
+                  )),
+              iconTheme: WidgetStateProperty.resolveWith((states) => IconThemeData(
+                    color: states.contains(WidgetState.selected) ? AppColors.pine : AppColors.muted,
+                  )),
+            ),
+            child: NavigationBar(
+              height: 68,
+              selectedIndex: selected < 0 ? 0 : selected,
+              onDestinationSelected: (value) => setState(() {
+                _index = tabs[value].index;
+                _section = 0;
+              }),
+              destinations: tabs
+                  .map((tab) => NavigationDestination(icon: Icon(tab.icon), label: tab.label))
+                  .toList(),
+            ),
           ),
         ),
       ),

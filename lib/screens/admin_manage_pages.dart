@@ -6,11 +6,11 @@ import '../data/console_repository.dart';
 import '../theme/app_theme.dart';
 import '../widgets/tawasul_widgets.dart';
 
+import './admin_sections_screens.dart';
+
 part 'admin_specs.dart';
 part 'admin_record_screens.dart';
 part 'admin_specs_more.dart';
-part 'admin_sections.dart';
-part 'admin_sections_screens.dart';
 part 'admin_field_words.dart';
 part 'admin_users_pages.dart';
 

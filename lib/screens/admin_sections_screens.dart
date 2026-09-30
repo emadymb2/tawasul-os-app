@@ -1,4 +1,11 @@
-part of 'admin_manage_pages.dart';
+import 'package:flutter/material.dart';
+
+import '../core/l10n.dart';
+import '../data/console_repository.dart';
+import '../theme/app_theme.dart';
+import 'admin_section_detail_screens.dart';
+import 'admin_sections.dart';
+import 'admin_manage_pages.dart';
 
 /// One admin menu section (mirrors a group of the school website's menu).
 class AdminSection {
@@ -41,6 +48,12 @@ AdminResource _resourceFor(AdminPageSpec page, String path, int index, IconData 
   return AdminResource(path, '${page.ar} — $en', en, icon);
 }
 
+/// Looks up a dedicated section-level screen for the given section index.
+Widget? adminSectionScreenFor(int sectionIndex, ConsoleRepository repository) {
+  if (sectionIndex < 0 || sectionIndex >= adminSectionScreens.length) return null;
+  return adminSectionScreens[sectionIndex](repository);
+}
+
 /// Admin "Sections" tab: every section as a card grid.
 class AdminSectionsHome extends StatelessWidget {
   const AdminSectionsHome({super.key, required this.repository});
@@ -50,22 +63,53 @@ class AdminSectionsHome extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final s = L10n.of(context);
-    return WhitePanel(
-      title: s.isArabic ? 'أقسام الإدارة' : 'Admin sections',
-      child: Column(
-        children: adminSections
-            .map((section) => ListTile(
-                  contentPadding: EdgeInsets.zero,
-                  leading: Icon(section.icon, color: AppColors.pine),
-                  title: Text(section.title(s), style: const TextStyle(fontWeight: FontWeight.w700, color: AppColors.ink)),
-                  subtitle: Text('${section.pages.length} ${s.isArabic ? 'صفحة' : 'pages'}',
-                      style: const TextStyle(color: AppColors.muted)),
-                  trailing: const Icon(Icons.chevron_right, color: AppColors.muted),
-                  onTap: () => Navigator.of(context).push(MaterialPageRoute(
-                    builder: (_) => _AdminSectionScreen(section: section, repository: repository),
-                  )),
-                ))
-            .toList(),
+    return Scaffold(
+      appBar: AppBar(
+        backgroundColor: AppColors.pine,
+        foregroundColor: Colors.white,
+        title: Text(s.isArabic ? 'أقسام الإدارة' : 'Admin sections'),
+      ),
+      body: ListView(
+        padding: const EdgeInsets.all(16),
+        children: [
+          for (int i = 0; i < adminSections.length; i++)
+            _SectionCard(
+              section: adminSections[i],
+              onTap: () {
+                final dedicated = adminSectionScreenFor(i, repository);
+                if (dedicated != null) {
+                  Navigator.of(context).push(MaterialPageRoute(builder: (_) => dedicated));
+                } else {
+                  Navigator.of(context).push(MaterialPageRoute(
+                    builder: (_) => _AdminSectionScreen(section: adminSections[i], repository: repository),
+                  ));
+                }
+              },
+            ),
+        ],
+      ),
+    );
+  }
+}
+
+class _SectionCard extends StatelessWidget {
+  const _SectionCard({required this.section, required this.onTap});
+
+  final AdminSection section;
+  final VoidCallback onTap;
+
+  @override
+  Widget build(BuildContext context) {
+    final s = L10n.of(context);
+    return Card(
+      margin: const EdgeInsets.only(bottom: 8),
+      child: ListTile(
+        contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+        leading: Icon(section.icon, size: 28, color: AppColors.pine),
+        title: Text(section.title(s), style: const TextStyle(fontWeight: FontWeight.w800, color: AppColors.ink, fontSize: 16)),
+        subtitle: Text('${section.pages.length} ${s.isArabic ? 'صفحة' : 'pages'}', style: const TextStyle(color: AppColors.muted)),
+        trailing: const Icon(Icons.chevron_right, color: AppColors.muted),
+        onTap: onTap,
       ),
     );
   }
@@ -78,11 +122,19 @@ class _AdminSectionScreen extends StatelessWidget {
   final ConsoleRepository repository;
 
   void _open(BuildContext context, AdminPageSpec page) {
+    // 1. Try dedicated user-admin screens (Users, Roles, etc.)
     final dedicated = userAdminScreenFor(page, repository.api);
     if (dedicated != null) {
       Navigator.of(context).push(MaterialPageRoute(builder: (_) => dedicated));
       return;
     }
+    // 2. Try section-specific dedicated screens
+    final sectionScreen = adminPageScreens[page.paths.first];
+    if (sectionScreen != null) {
+      Navigator.of(context).push(MaterialPageRoute(builder: (_) => sectionScreen(repository, section.icon)));
+      return;
+    }
+    // 3. Fall back to generic resource list / multi-resource page
     final resources = [
       for (var i = 0; i < page.paths.length; i++) _resourceFor(page, page.paths[i], i, section.icon),
     ];

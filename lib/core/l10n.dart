@@ -115,6 +115,7 @@ class L10n {
   String get offlineBanner => _t('وضع عدم الاتصال · بيانات محفوظة', 'Offline · showing saved data');
   String pendingDrafts(int count) => _t('$count بانتظار الإرسال', '$count waiting to sync');
   String get noData => _t('لا توجد بيانات بعد', 'No data yet');
+  String get pressBackAgain => _t('اضغط مرة أخرى للخروج', 'Press back again to exit');
   String get retry => _t('إعادة المحاولة', 'Retry');
   String get refresh => _t('تحديث', 'Refresh');
   String get saved => _t('تم الحفظ', 'Saved');

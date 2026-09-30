@@ -6,6 +6,7 @@ import '../theme/app_theme.dart';
 import '../widgets/tawasul_widgets.dart';
 import '../data/console_repository.dart';
 import 'admin_manage_pages.dart';
+import 'admin_sections_screens.dart';
 import 'staff_pages.dart';
 
 Widget adminContent({required int index, required ConsoleSnapshot snapshot, required ConsoleRepository repository}) {
