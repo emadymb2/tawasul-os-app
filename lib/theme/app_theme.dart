@@ -14,6 +14,24 @@ class AppColors {
   static const line = Color(0xFFE0DED8);
   static const muted = Color(0xFF718177);
   static const mintText = Color(0xCCDDEDE5);
+  static const blue = Color(0xFF4A90D9);
+  static const purple = Color(0xFF8E6FC7);
+  static const orange = Color(0xFFFFA500);
+  static const pink = Color(0xFFE89BAE);
+  static const teal = Color(0xFF1AABD6);
+
+  static Color subjectColor(String subject) {
+    final s = subject.toLowerCase().trim();
+    if (s.contains('لغة عربية') || s.contains('عربي') || s.contains('Arabic')) return pine;
+    if (s.contains('قرآن') || s.contains('quran') || s.contains('recitation')) return green;
+    if (s.contains('إسلام') || s.contains('Islamic')) return sage;
+    if (s.contains('رياضيات') || s.contains('math') || s.contains('عليم')) return blue;
+    if (s.contains('إنجليزي') || s.contains('english')) return orange;
+    if (s.contains('فيزياء') || s.contains('physics')) return purple;
+    if (s.contains('كيمياء') || s.contains('chemistry')) return teal;
+    if (s.contains('أدب') || s.contains('literature')) return pink;
+    return gold;
+  }
 }
 
 class AppRadii {

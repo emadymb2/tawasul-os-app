@@ -35,15 +35,16 @@ Widget parentContent({
     case 8:
       return ChatListScreen(repository: repository, user: user);
     default:
-      return Column(children: [ParentDashboard(snapshot: snapshot, onSelectChild: onSelectChild), picker]);
+      return ParentDashboard(snapshot: snapshot, onSelectChild: onSelectChild, childPicker: picker);
   }
 }
 
 class ParentDashboard extends StatelessWidget {
-  const ParentDashboard({super.key, required this.snapshot, required this.onSelectChild});
+  const ParentDashboard({super.key, required this.snapshot, required this.onSelectChild, required this.childPicker});
 
   final ConsoleSnapshot snapshot;
   final void Function(String childId) onSelectChild;
+  final Widget childPicker;
 
   @override
   Widget build(BuildContext context) {
@@ -54,6 +55,7 @@ class ParentDashboard extends StatelessWidget {
       ..sort((a, b) => a.dueDate.compareTo(b.dueDate));
     return Column(
       children: [
+        childPicker,
         HeroPanel(greeting: strings.welcome, name: snapshot.personName, subtitle: strings.parentPortal),
         MetricGrid(metrics: [
           MetricTileData(title: strings.myChildren, value: '${snapshot.children.length}', tone: TileTone.mint),

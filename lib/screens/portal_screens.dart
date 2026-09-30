@@ -571,7 +571,7 @@ class ParentDashboardScreen extends StatelessWidget {
           child: SingleChildScrollView(
             physics: const AlwaysScrollableScrollPhysics(),
             padding: const EdgeInsets.all(16),
-            child: ParentDashboard(snapshot: snapshot, onSelectChild: onSelectChild),
+             child: ParentDashboard(snapshot: snapshot, onSelectChild: onSelectChild, childPicker: ChildPicker(snapshot: snapshot, onSelectChild: onSelectChild)),
           ),
         ),
       ),

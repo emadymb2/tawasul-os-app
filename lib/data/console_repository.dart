@@ -111,6 +111,9 @@ class ConsoleRepository {
     final invoiceRows = await _safeList('/invoices', {'pageSize': '200', 'sort': '-invoiceDueDate'});
     final invoices = invoiceRows.map(_invoiceFrom).toList();
 
+    final expenseRows = await _safeList('/expenses', {'pageSize': '200', 'sort': '-timestampCreator'});
+    final expenses = expenseRows.map(_expenseFrom).toList();
+
     final attendanceRows = await _safeList('/attendance', {'pageSize': '200', 'sort': '-date'});
     final attendance = attendanceRows.map(_attendanceFrom).toList();
 
@@ -120,6 +123,7 @@ class ConsoleRepository {
       classes: classes,
       students: students.values.toList(),
       invoices: invoices,
+      expenses: expenses,
       attendance: attendance,
       attendanceRate: _rate(attendance),
       notices: await _notices(user),
@@ -357,12 +361,31 @@ class ConsoleRepository {
   InvoiceItem _invoiceFrom(Map<String, dynamic> row) {
     final title = (row['notes'] ?? row['name'] ?? row['title'] ?? '').toString();
     final due = row['invoiceDueDate']?.toString() ?? '';
+    final paidDate = row['paidDate']?.toString() ?? '';
     final student = _fullName(row);
+    final studentId = row['studentID']?.toString() ?? '';
     final amount = (row['invoiceTotal'] ?? row['finalAmount'] ?? row['amount'] ?? '').toString();
     return InvoiceItem(
+      id: row['tawasulFinanceInvoiceID']?.toString() ?? '',
       title: title.isEmpty ? '#${row['tawasulFinanceInvoiceID'] ?? ''}' : _stripHtml(title),
-      amount: [amount, student, due].where((part) => part.trim().isNotEmpty).join(' · '),
+      studentName: student,
+      amount: amount,
       status: row['status']?.toString() ?? '',
+      dueDate: due,
+      paidDate: paidDate,
+      studentId: studentId,
+    );
+  }
+
+  ExpenseItem _expenseFrom(Map<String, dynamic> row) {
+    return ExpenseItem(
+      id: row['tawasulFinanceExpenseID']?.toString() ?? '',
+      title: row['title']?.toString() ?? '',
+      status: row['status']?.toString() ?? '',
+      cost: row['cost']?.toString() ?? '',
+      paymentDate: row['paymentDate']?.toString() ?? '',
+      paymentAmount: row['paymentAmount']?.toString() ?? '',
+      budgetName: row['budgetName']?.toString() ?? '',
     );
   }
 

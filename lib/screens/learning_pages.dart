@@ -1246,6 +1246,23 @@ class _HomeworkSubmitState extends State<_HomeworkSubmit> {
                       }
                     },
                   ),
+                  const SizedBox(height: 8),
+                  OutlinedButton(
+                    onPressed: busy ? null : () async {
+                      setDialog(() => busy = true);
+                      try {
+                        await widget.data.submit(id, widget.user.personId, '');
+                        if (dialogContext.mounted) Navigator.of(dialogContext).pop();
+                        if (!mounted) return;
+                        _toast(context, ar ? 'تم التسليم' : 'Submitted');
+                        setState(() => _future = _load());
+                      } catch (e) {
+                        setDialog(() => busy = false);
+                        if (mounted) _toast(context, _explain(e, ar));
+                      }
+                    },
+                    child: Text(ar ? 'تم التسليم (بدون محتوى)' : 'Mark submitted (no content)'),
+                  ),
                 ],
               ]),
             ),
@@ -1390,7 +1407,16 @@ class _TestRunnerState extends State<_TestRunner> {
             style: const TextStyle(color: AppColors.muted)),
         const SizedBox(height: 12),
         for (var i = 0; i < widget.test.questions.length; i++)
-          LabeledField(label: '${i + 1}. ${widget.test.questions[i]}', controller: _answers[i], maxLines: 3),
+          Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text('${i + 1}. ${ar ? 'سؤال' : 'Question'}: ${widget.test.questions[i]}',
+                  style: const TextStyle(color: AppColors.pine, fontSize: 14, fontWeight: FontWeight.w700)),
+              const SizedBox(height: 6),
+              LabeledField(label: '', controller: _answers[i], maxLines: 3),
+              const SizedBox(height: 14),
+            ],
+          ),
         PrimaryButton(label: ar ? 'تسليم الاختبار' : 'Submit test', busy: _busy, onPressed: _submit),
       ]),
     );

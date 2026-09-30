@@ -173,6 +173,8 @@ class L10n {
   String get childrenOverview => _t('نظرة على الأبناء', 'Children overview');
   String get upcomingHomework => _t('واجبات قادمة', 'Upcoming homework');
   String get noUpcomingHomework => _t('لا واجبات قادمة', 'No upcoming homework');
+  String get noHomework => _t('لا توجد واجبات', 'No homework');
+  String get noLessons => _t('لا حصص اليوم', "No lessons today");
   String get childClasses => _t('صفوف الابن', "Child's classes");
   String get attendanceBreakdown => _t('تفصيل الحضور', 'Attendance breakdown');
   String get titleRequired => _t('أدخل العنوان', 'Enter a title');
@@ -216,6 +218,21 @@ class L10n {
   String get feesOverview => _t('نظرة على الرسوم', 'Fees overview');
   String get invoicesCount => _t('عدد الفواتير', 'Invoices');
   String get totalCollected => _t('إجمالي المحصّل', 'Total collected');
+  String get finance => _t('المالية', 'Finance');
+  String get financeOverview => _t('نظرة على التمويل', 'Finance overview');
+  String get totalOutstanding => _t('إجمالي المستحق غير المدفوع', 'Total outstanding');
+  String get totalPending => _t('معلق', 'Pending');
+  String get expenses => _t('النفقات', 'Expenses');
+  String get expensesTotal => _t('إجمالي النفقات', 'Total expenses');
+  String get budgets => _t('الميزانيات', 'Budgets');
+  String get budgetTotal => _t('إجمالي الميزانية', 'Total budget');
+  String get budgetSpent => _t('المُنفَّق', 'Spent');
+  String get expenseStatusPending => _t('معلق', 'Pending');
+  String get expenseStatusApproved => _t('موافقة', 'Approved');
+  String get expenseStatusPaid => _t('مدفوعة', 'Paid');
+  String get expenseStatusRejected => _t('مرفوضة', 'Rejected');
+  String get noExpenses => _t('لا توجد نفقات مسجلة', 'No expenses on record');
+  String get noBudgets => _t('لا توجد ميزانيات مسجلة', 'No budgets on record');
 }
 
 class LocaleScope extends InheritedWidget {

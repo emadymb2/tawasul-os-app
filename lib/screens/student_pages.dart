@@ -9,7 +9,6 @@ import '../data/console_repository.dart';
 import 'calendar_pages.dart';
 import 'chat_pages.dart';
 import 'learning_pages.dart';
-
 Widget studentContent({
   required int index,
   required ConsoleSnapshot snapshot,
@@ -20,15 +19,15 @@ Widget studentContent({
     case 1:
       return SchoolMonthCalendar(repository: repository);
     case 2:
-      return studentHomeworkPage(snapshot: snapshot, repository: repository, user: user);
+      return StudentLessonsSummary(snapshot: snapshot);
     case 3:
       return StudentAttendance(snapshot: snapshot);
     case 4:
       return StudentGrades(snapshot: snapshot);
     case 5:
       return StudentBehaviour(snapshot: snapshot);
-    case 6:
-      return StudentMessages(snapshot: snapshot);
+    case 7:
+      return StudentTestsHub(snapshot: snapshot, repository: repository, user: user);
     case 8:
       return ChatListScreen(repository: repository, user: user);
     default:
@@ -220,4 +219,56 @@ class StudentMessages extends StatelessWidget {
             ),
     );
   }
+}
+
+class StudentLessonsSummary extends StatelessWidget {
+  const StudentLessonsSummary({super.key, required this.snapshot});
+
+  final ConsoleSnapshot snapshot;
+
+  @override
+  Widget build(BuildContext context) {
+    final strings = L10n.of(context);
+    final today = DateTime.now().toIso8601String().split('T').first;
+    final todaysLessons = snapshot.lessons.where((lesson) => lesson.date == today).toList();
+    return Column(
+      children: [
+        WhitePanel(
+          title: strings.todaysLessons,
+          child: todaysLessons.isEmpty
+              ? EmptyState(message: strings.noLessons)
+              : LessonList(lessons: todaysLessons),
+        ),
+        WhitePanel(
+          title: strings.classes,
+          child: snapshot.classes.isEmpty
+              ? EmptyState(message: strings.noClasses)
+              : Column(
+                  children: snapshot.classes
+                      .map((item) => RowTile(
+                            leading: item.name.isEmpty ? '—' : item.name.substring(0, 1),
+                            title: item.name,
+                            subtitle: item.courseName,
+                          ))
+                      .toList(),
+                ),
+        ),
+        WhitePanel(
+          title: strings.homework,
+          child: snapshot.homework.isEmpty ? EmptyState(message: strings.noHomework) : HomeworkList(items: snapshot.homework),
+        ),
+      ],
+    );
+  }
+}
+
+class StudentTestsHub extends StatelessWidget {
+  const StudentTestsHub({super.key, required this.snapshot, required this.repository, required this.user});
+
+  final ConsoleSnapshot snapshot;
+  final ConsoleRepository repository;
+  final AuthUser user;
+
+  @override
+  Widget build(BuildContext context) => studentLearningHub(snapshot: snapshot, repository: repository, user: user);
 }

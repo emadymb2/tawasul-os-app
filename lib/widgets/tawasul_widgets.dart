@@ -471,29 +471,35 @@ class HomeworkList extends StatelessWidget {
     final strings = L10n.of(context);
     return Column(
       children: items
-          .map((item) => Container(
-                margin: const EdgeInsets.only(bottom: 10),
-                padding: const EdgeInsets.all(16),
-                decoration: BoxDecoration(color: AppColors.mint, borderRadius: BorderRadius.circular(22)),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(item.title, style: const TextStyle(color: AppColors.pine, fontSize: 15, fontWeight: FontWeight.w800)),
-                    if (item.subject.isNotEmpty)
-                      Text(item.subject, style: const TextStyle(color: AppColors.muted, fontSize: 12)),
-                    if (item.description.isNotEmpty) ...[
-                      const SizedBox(height: 6),
-                      Text(item.description, style: const TextStyle(color: AppColors.ink, fontSize: 13)),
-                    ],
-                    if (item.dueDate.isNotEmpty) ...[
-                      const SizedBox(height: 8),
-                      Text('${strings.dueDate}: ${item.dueDate}',
-                          style: const TextStyle(color: AppColors.pine, fontSize: 12, fontWeight: FontWeight.w700)),
-                    ],
+          .map((item) {
+            final color = AppColors.subjectColor(item.subject);
+            return Container(
+              margin: const EdgeInsets.only(bottom: 10),
+              padding: const EdgeInsets.all(16),
+              decoration: BoxDecoration(color: color.withOpacity(0.15), borderRadius: BorderRadius.circular(22)),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Row(children: [
+                    Container(width: 12, height: 12, decoration: BoxDecoration(shape: BoxShape.circle, color: color)),
+                    const SizedBox(width: 6),
+                    Text(item.title, style: TextStyle(color: color, fontSize: 15, fontWeight: FontWeight.w800)),
+                  ]),
+                  if (item.subject.isNotEmpty)
+                    Text(item.subject, style: TextStyle(color: color.withOpacity(0.7), fontSize: 12)),
+                  if (item.description.isNotEmpty) ...[
+                    const SizedBox(height: 6),
+                    Text(item.description, style: const TextStyle(color: AppColors.ink, fontSize: 13)),
                   ],
-                ),
-              ))
-          .toList(),
+                  if (item.dueDate.isNotEmpty) ...[
+                    const SizedBox(height: 8),
+                    Text('${strings.dueDate}: ${item.dueDate}',
+                        style: TextStyle(color: color, fontSize: 12, fontWeight: FontWeight.w700)),
+                  ],
+                ],
+              ),
+            );
+          }).toList(),
     );
   }
 }

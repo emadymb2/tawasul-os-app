@@ -121,16 +121,154 @@ class GradeItem {
 }
 
 class InvoiceItem {
-  const InvoiceItem({required this.title, required this.amount, required this.status});
+  const InvoiceItem({
+    required this.id,
+    required this.title,
+    required this.studentName,
+    required this.amount,
+    required this.status,
+    required this.dueDate,
+    required this.paidDate,
+    required this.studentId,
+  });
+
+  final String id;
   final String title;
+  final String studentName;
   final String amount;
   final String status;
+  final String dueDate;
+  final String paidDate;
+  final String studentId;
 
-  Map<String, dynamic> toJson() => {'title': title, 'amount': amount, 'status': status};
+  Map<String, dynamic> toJson() => {
+        'id': id,
+        'title': title,
+        'studentName': studentName,
+        'amount': amount,
+        'status': status,
+        'dueDate': dueDate,
+        'paidDate': paidDate,
+        'studentId': studentId,
+      };
+
   factory InvoiceItem.fromJson(Map<String, dynamic> json) => InvoiceItem(
+        id: json['id']?.toString() ?? '',
         title: json['title']?.toString() ?? '',
+        studentName: json['studentName']?.toString() ?? '',
         amount: json['amount']?.toString() ?? '',
         status: json['status']?.toString() ?? '',
+        dueDate: json['dueDate']?.toString() ?? '',
+        paidDate: json['paidDate']?.toString() ?? '',
+        studentId: json['studentId']?.toString() ?? '',
+      );
+}
+
+class FinanceSummary {
+  const FinanceSummary({
+    required this.totalOutstanding,
+    required this.totalCollected,
+    required this.totalPending,
+    required this.invoicesCount,
+    required this.expensesTotal,
+    required this.budgetTotal,
+    required this.budgetSpent,
+  });
+
+  final String totalOutstanding;
+  final String totalCollected;
+  final String totalPending;
+  final String invoicesCount;
+  final String expensesTotal;
+  final String budgetTotal;
+  final String budgetSpent;
+
+  Map<String, dynamic> toJson() => {
+        'totalOutstanding': totalOutstanding,
+        'totalCollected': totalCollected,
+        'totalPending': totalPending,
+        'invoicesCount': invoicesCount,
+        'expensesTotal': expensesTotal,
+        'budgetTotal': budgetTotal,
+        'budgetSpent': budgetSpent,
+      };
+
+  factory FinanceSummary.fromJson(Map<String, dynamic> json) => FinanceSummary(
+        totalOutstanding: json['totalOutstanding']?.toString() ?? '',
+        totalCollected: json['totalCollected']?.toString() ?? '',
+        totalPending: json['totalPending']?.toString() ?? '',
+        invoicesCount: json['invoicesCount']?.toString() ?? '',
+        expensesTotal: json['expensesTotal']?.toString() ?? '',
+        budgetTotal: json['budgetTotal']?.toString() ?? '',
+        budgetSpent: json['budgetSpent']?.toString() ?? '',
+      );
+}
+
+class ExpenseItem {
+  const ExpenseItem({
+    required this.id,
+    required this.title,
+    required this.status,
+    required this.cost,
+    required this.paymentDate,
+    required this.paymentAmount,
+    required this.budgetName,
+  });
+
+  final String id;
+  final String title;
+  final String status;
+  final String cost;
+  final String paymentDate;
+  final String paymentAmount;
+  final String budgetName;
+
+  Map<String, dynamic> toJson() => {
+        'id': id,
+        'title': title,
+        'status': status,
+        'cost': cost,
+        'paymentDate': paymentDate,
+        'paymentAmount': paymentAmount,
+        'budgetName': budgetName,
+      };
+
+  factory ExpenseItem.fromJson(Map<String, dynamic> json) => ExpenseItem(
+        id: json['id']?.toString() ?? '',
+        title: json['title']?.toString() ?? '',
+        status: json['status']?.toString() ?? '',
+        cost: json['cost']?.toString() ?? '',
+        paymentDate: json['paymentDate']?.toString() ?? '',
+        paymentAmount: json['paymentAmount']?.toString() ?? '',
+        budgetName: json['budgetName']?.toString() ?? '',
+      );
+}
+
+class BudgetItem {
+  const BudgetItem({
+    required this.id,
+    required this.name,
+    required this.category,
+    required this.active,
+  });
+
+  final String id;
+  final String name;
+  final String category;
+  final bool active;
+
+  Map<String, dynamic> toJson() => {
+        'id': id,
+        'name': name,
+        'category': category,
+        'active': active,
+      };
+
+  factory BudgetItem.fromJson(Map<String, dynamic> json) => BudgetItem(
+        id: json['id']?.toString() ?? '',
+        name: json['name']?.toString() ?? '',
+        category: json['category']?.toString() ?? '',
+        active: json['active']?.toString().toLowerCase() == 'y',
       );
 }
 
@@ -324,6 +462,7 @@ class ConsoleSnapshot {
     this.notices = const [],
     this.grades = const [],
     this.invoices = const [],
+    this.expenses = const [],
     this.behaviour = const [],
     this.messages = const [],
     this.homework = const [],
@@ -343,6 +482,7 @@ class ConsoleSnapshot {
   final List<NoticeItem> notices;
   final List<GradeItem> grades;
   final List<InvoiceItem> invoices;
+  final List<ExpenseItem> expenses;
   final List<BehaviourItem> behaviour;
   final List<MessageItem> messages;
   final List<HomeworkItem> homework;
@@ -362,6 +502,7 @@ class ConsoleSnapshot {
         notices: notices,
         grades: grades,
         invoices: invoices,
+        expenses: expenses,
         behaviour: behaviour,
         messages: messages,
         homework: homework,
@@ -382,6 +523,7 @@ class ConsoleSnapshot {
         'notices': notices.map((e) => e.toJson()).toList(),
         'grades': grades.map((e) => e.toJson()).toList(),
         'invoices': invoices.map((e) => e.toJson()).toList(),
+        'expenses': expenses.map((e) => e.toJson()).toList(),
         'behaviour': behaviour.map((e) => e.toJson()).toList(),
         'messages': messages.map((e) => e.toJson()).toList(),
         'homework': homework.map((e) => e.toJson()).toList(),
@@ -404,6 +546,7 @@ class ConsoleSnapshot {
         notices: _list(json['notices'], NoticeItem.fromJson),
         grades: _list(json['grades'], GradeItem.fromJson),
         invoices: _list(json['invoices'], InvoiceItem.fromJson),
+        expenses: _list(json['expenses'], ExpenseItem.fromJson),
         behaviour: _list(json['behaviour'], BehaviourItem.fromJson),
         messages: _list(json['messages'], MessageItem.fromJson),
         homework: _list(json['homework'], HomeworkItem.fromJson),

@@ -1,7 +1,7 @@
 name: tawasul_school_os
 description: Offline-first Android consoles for Tawasul School OS powered by the school core.
 publish_to: "none"
-version: 1.0.0+15
+version: 1.0.0+16
 
 environment:
   sdk: ">=3.5.0 <4.0.0"

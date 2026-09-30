@@ -128,11 +128,11 @@ class _ConsoleScreenState extends State<ConsoleScreen> {
           ConsoleTab(1, strings.timetable, Icons.calendar_today_outlined, ['/lessons', '/class-enrolments']),
           ConsoleTab(2, strings.homework, Icons.menu_book_outlined, ['/lessons']),
           ConsoleTab(3, strings.attendance, Icons.fact_check_outlined, ['/attendance']),
-          ConsoleTab(4, strings.grades, Icons.grade_outlined, ['/markbook-entries']),
-          ConsoleTab(5, strings.behaviour, Icons.emoji_people_outlined, ['/behaviour']),
-          ConsoleTab(6, strings.fees, Icons.receipt_long_outlined, ['/invoices']),
-          ConsoleTab(7, strings.messages, Icons.mail_outline, ['/messages']),
           ConsoleTab(8, strings.chat, Icons.chat_bubble_outline, ['/chats']),
+          ConsoleTab(4, strings.grades, Icons.grade_outlined, ['/markbook-entries'], true),
+          ConsoleTab(5, strings.behaviour, Icons.emoji_people_outlined, ['/behaviour'], true),
+          ConsoleTab(6, strings.fees, Icons.receipt_long_outlined, ['/invoices'], true),
+          ConsoleTab(7, strings.messages, Icons.mail_outline, ['/messages'], true),
         ];
       case ConsoleRole.student:
         return [
@@ -140,7 +140,6 @@ class _ConsoleScreenState extends State<ConsoleScreen> {
           ConsoleTab(1, strings.timetable, Icons.calendar_today_outlined, ['/school-terms', '/days-of-weeks']),
           ConsoleTab(2, strings.homework, Icons.menu_book_outlined, ['/lessons']),
           ConsoleTab(7, strings.isArabic ? 'الاختبارات' : 'Tests', Icons.quiz_outlined, ['/markbook-columns', '/planner-entry-homeworks']),
-          ConsoleTab(6, strings.messages, Icons.mail_outline, ['/messages']),
           ConsoleTab(8, strings.chat, Icons.chat_bubble_outline, ['/chats']),
           ConsoleTab(3, strings.attendance, Icons.fact_check_outlined, ['/attendance'], true),
           ConsoleTab(4, strings.grades, Icons.grade_outlined, ['/markbook-entries'], true),
@@ -159,6 +158,7 @@ class _ConsoleScreenState extends State<ConsoleScreen> {
           ConsoleTab(0, strings.dashboard, Icons.dashboard_outlined),
           ConsoleTab(1, strings.isArabic ? 'الأقسام' : 'Sections', Icons.apps_outlined),
           ConsoleTab(6, strings.isArabic ? 'الجداول' : 'Timetable', Icons.calendar_month_outlined),
+          ConsoleTab(9, strings.finance, Icons.account_balance_outlined, ['/fees', '/invoices', '/expenses', '/budgets'], true),
           ConsoleTab(4, strings.messages, Icons.mail_outline, ['/messages']),
           ConsoleTab(5, strings.chat, Icons.chat_bubble_outline, ['/chats']),
         ];
@@ -221,6 +221,7 @@ class _ConsoleScreenState extends State<ConsoleScreen> {
           }),
         );
       case ConsoleRole.parent:
+        if (pageIndex == 8) return ChatListScreen(repository: widget.repository, user: _user);
         return parentContent(
           index: pageIndex,
           snapshot: snapshot,
@@ -237,6 +238,7 @@ class _ConsoleScreenState extends State<ConsoleScreen> {
         return staffContent(index: pageIndex, snapshot: snapshot, repository: widget.repository, user: _user);
       case ConsoleRole.admin:
         if (pageIndex == 5) return ChatListScreen(repository: widget.repository, user: _user);
+        if (pageIndex == 9) return AdminFinance(snapshot: snapshot);
         return adminContent(index: pageIndex, snapshot: snapshot, repository: widget.repository);
     }
   }
