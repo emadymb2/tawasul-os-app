@@ -166,6 +166,70 @@ class MessageItem {
       );
 }
 
+class ChatItem {
+  const ChatItem({required this.id, required this.title, required this.type, this.avatar = '', this.lastMessage = '', this.lastMessageDate = '', this.unreadCount = 0, this.participantCount = 0});
+
+  final String id;
+  final String title;
+  final String type;
+  final String avatar;
+  final String lastMessage;
+  final String lastMessageDate;
+  final int unreadCount;
+  final int participantCount;
+
+  factory ChatItem.fromJson(Map<String, dynamic> json) => ChatItem(
+        id: json['chat_id']?.toString() ?? '',
+        title: json['name']?.toString() ?? (json['title']?.toString() ?? ''),
+        type: json['type']?.toString() ?? 'individual',
+        avatar: json['participantAvatar']?.toString() ?? '',
+        lastMessage: json['lastMessageContent']?.toString() ?? '',
+        lastMessageDate: json['lastMessageTimestamp']?.toString() ?? '',
+        unreadCount: int.tryParse(json['unreadCount']?.toString() ?? '0') ?? 0,
+        participantCount: int.tryParse(json['participantCount']?.toString() ?? '0') ?? 0,
+      );
+}
+
+class ChatMessageItem {
+  const ChatMessageItem({required this.id, required this.chatId, required this.senderId, required this.senderName, required this.content, required this.timestamp, this.isMine = false, this.type = 'text'});
+
+  final String id;
+  final String chatId;
+  final String senderId;
+  final String senderName;
+  final String content;
+  final String timestamp;
+  final bool isMine;
+  final String type;
+
+  factory ChatMessageItem.fromJson(Map<String, dynamic> json, {required String currentPersonId}) => ChatMessageItem(
+        id: json['chat_message_id']?.toString() ?? '',
+        chatId: json['chat_id']?.toString() ?? '',
+        senderId: json['tawasulPersonID']?.toString() ?? '',
+        senderName: '${json['preferredName']?.toString() ?? ''} ${json['surname']?.toString() ?? ''}'.trim(),
+        content: json['content']?.toString() ?? '',
+        timestamp: json['timestampCreated']?.toString() ?? '',
+        isMine: json['tawasulPersonID']?.toString() == currentPersonId,
+        type: json['type']?.toString() ?? 'text',
+      );
+}
+
+class ChatParticipant {
+  const ChatParticipant({required this.id, required this.name, required this.role, this.avatar = ''});
+
+  final String id;
+  final String name;
+  final String role;
+  final String avatar;
+
+  factory ChatParticipant.fromJson(Map<String, dynamic> json) => ChatParticipant(
+        id: json['tawasulPersonID']?.toString() ?? '',
+        name: '${json['preferredName']?.toString() ?? ''} ${json['surname']?.toString() ?? ''}'.trim(),
+        role: json['roleName']?.toString() ?? '',
+        avatar: json['image_240']?.toString() ?? '',
+      );
+}
+
 class HomeworkItem {
   const HomeworkItem({
     required this.subject,

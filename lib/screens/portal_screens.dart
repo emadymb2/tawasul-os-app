@@ -5,6 +5,7 @@ import '../core/models.dart';
 import '../core/session.dart';
 import '../data/console_repository.dart';
 import '../theme/app_theme.dart';
+import 'chat_pages.dart';
 import 'learning_pages.dart';
 import 'parent_pages.dart';
 import 'staff_pages.dart';
@@ -29,8 +30,9 @@ final teacherRoutes = <TeacherRoute>[
   TeacherRoute(1, (s) => s.timetable, Icons.calendar_today_outlined, (_, repo, user, snap) => TeacherTimetableScreen(snapshot: snap, repository: repo, user: user)),
   TeacherRoute(2, (s) => s.attendance, Icons.fact_check_outlined, (_, repo, user, snap) => TeacherAttendanceScreen(snapshot: snap, user: user, repository: repo)),
   TeacherRoute(3, (s) => s.isArabic ? 'الدروس' : 'Lessons', Icons.edit_note_outlined, (_, repo, user, snap) => TeacherLessonsScreen(snapshot: snap, repository: repo, user: user)),
-  TeacherRoute(7, (s) => s.messages, Icons.mail_outline, (_, repo, user, snap) => TeacherMessagesScreen(snapshot: snap)),
-  TeacherRoute(8, (s) => s.more, Icons.more_horiz, (_, repo, user, snap) => TeacherMore(repository: repo)),
+  TeacherRoute(7, (s) => s.messages, Icons.mail_outline, (_, repo, user, snap) => TeacherMessagesScreen(snapshot: snap, user: user, repository: repo)),
+  TeacherRoute(8, (s) => s.chat, Icons.chat_bubble_outline, (_, repo, user, snap) => TeacherChatScreen(repository: repo, user: user)),
+  TeacherRoute(9, (s) => s.more, Icons.more_horiz, (_, repo, user, snap) => TeacherMore(repository: repo)),
 ];
 
 class TeacherDashboardScreen extends StatelessWidget {
@@ -168,9 +170,11 @@ class TeacherLessonsScreen extends StatelessWidget {
 }
 
 class TeacherMessagesScreen extends StatelessWidget {
-  const TeacherMessagesScreen({super.key, required this.snapshot});
+  const TeacherMessagesScreen({super.key, required this.snapshot, required this.user, required this.repository});
 
   final ConsoleSnapshot snapshot;
+  final AuthUser user;
+  final ConsoleRepository repository;
 
   @override
   Widget build(BuildContext context) {
@@ -184,7 +188,7 @@ class TeacherMessagesScreen extends StatelessWidget {
           title: Text(strings.messages),
         ),
         body: RefreshIndicator(
-          onRefresh: () async {},
+          onRefresh: () async => repository.load(user),
           child: SingleChildScrollView(
             physics: const AlwaysScrollableScrollPhysics(),
             padding: const EdgeInsets.all(16),
@@ -800,6 +804,49 @@ class ParentMessagesScreen extends StatelessWidget {
       ),
     );
   }
+}
+
+// ================================================================ Chat screens ===
+
+class TeacherChatScreen extends StatelessWidget {
+  const TeacherChatScreen({super.key, required this.repository, required this.user});
+
+  final ConsoleRepository repository;
+  final AuthUser user;
+
+  @override
+  Widget build(BuildContext context) => ChatListScreen(repository: repository, user: user);
+}
+
+class StaffChatScreen extends StatelessWidget {
+  const StaffChatScreen({super.key, required this.repository, required this.user});
+
+  final ConsoleRepository repository;
+  final AuthUser user;
+
+  @override
+  Widget build(BuildContext context) => ChatListScreen(repository: repository, user: user);
+}
+
+class StudentChatScreen extends StatelessWidget {
+  const StudentChatScreen({super.key, required this.repository, required this.user});
+
+  final ConsoleRepository repository;
+  final AuthUser user;
+
+  @override
+  Widget build(BuildContext context) => ChatListScreen(repository: repository, user: user);
+}
+
+class ParentChatScreen extends StatelessWidget {
+  const ParentChatScreen({super.key, required this.repository, required this.user, required this.onSelectChild});
+
+  final ConsoleRepository repository;
+  final AuthUser user;
+  final void Function(String childId) onSelectChild;
+
+  @override
+  Widget build(BuildContext context) => ChatListScreen(repository: repository, user: user);
 }
 
 // ================================================================ Portal bar ===

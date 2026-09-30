@@ -7,6 +7,7 @@ import '../widgets/tawasul_widgets.dart';
 import '../core/session.dart';
 import '../data/console_repository.dart';
 import 'calendar_pages.dart';
+import 'chat_pages.dart';
 import 'learning_pages.dart';
 
 Widget studentContent({
@@ -28,6 +29,8 @@ Widget studentContent({
       return StudentBehaviour(snapshot: snapshot);
     case 6:
       return StudentMessages(snapshot: snapshot);
+    case 8:
+      return ChatListScreen(repository: repository, user: user);
     default:
       return StudentDashboard(snapshot: snapshot);
   }

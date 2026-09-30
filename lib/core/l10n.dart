@@ -200,6 +200,18 @@ class L10n {
   String get noStudents => _t('لا يوجد طلاب', 'No students');
   String get staffNotices => _t('إشعارات الموظفين', 'Staff notices');
 
+  // Chat / Messenger
+  String get chat => _t('الدردشة', 'Chat');
+  String get chats => _t('الدردشات', 'Chats');
+  String get newChat => _t('دردشة جديدة', 'New chat');
+  String get typeMessage => _t('اكتب رسالة...', 'Type a message...');
+  String get noChats => _t('لا توجد دردشات', 'No chats');
+  String get online => _t('متصل', 'Online');
+  String get offline => _t('غير متصل', 'Offline');
+  String get searchChats => _t('ابحث في الدردشات...', 'Search chats...');
+  String get minute => _t('دقيقة', 'minute');
+  String get minutes => _t('دقائق', 'minutes');
+
   // Admin portal
   String get feesOverview => _t('نظرة على الرسوم', 'Fees overview');
   String get invoicesCount => _t('عدد الفواتير', 'Invoices');

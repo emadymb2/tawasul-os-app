@@ -891,6 +891,50 @@ class ConsoleRepository {
     return sent;
   }
 
+  // ------------------------------------------------------- chat / messenger ---
+
+  /// Returns chats this person participates in, sorted by most recent activity.
+  Future<List<Map<String, dynamic>>> loadChats(AuthUser user) async {
+    final rows = await _safeList('/chats', {'tawasulPersonID': user.personId});
+    // Enrich with the last message preview for each chat.
+    for (final row in rows) {
+      final msgs = await _safeList('/chat-messages', {'chat_id': row['chat_id']?.toString() ?? '', 'pageSize': '1'});
+      if (msgs.isNotEmpty) {
+        row['lastMessageContent'] = msgs.first['content']?.toString() ?? '';
+        row['lastMessageTimestamp'] = msgs.first['timestampCreated']?.toString() ?? '';
+      } else {
+        row['lastMessageContent'] = '';
+        row['lastMessageTimestamp'] = '';
+      }
+    }
+    return rows;
+  }
+
+  /// Loads messages for a specific chat.
+  Future<List<Map<String, dynamic>>> loadChatMessages(String chatId) async {
+    return _safeList('/chat-messages', {'chat_id': chatId, 'sortBy': 'timestampCreated', 'sortOrder': 'ASC'});
+  }
+
+  /// Loads participants for a specific chat.
+  Future<List<Map<String, dynamic>>> loadChatParticipants(String chatId) async {
+    return _safeList('/chat-participants', {'chat_id': chatId});
+  }
+
+  /// Sends a new message to a chat.
+  Future<Map<String, dynamic>> sendMessage({
+    required String chatId,
+    required String personId,
+    required String content,
+    String type = 'text',
+  }) async {
+    return api.postMap('/chat-messages', {
+      'chat_id': chatId,
+      'tawasulPersonID': personId,
+      'type': type,
+      'content': content,
+    });
+  }
+
   Future<List<Map<String, dynamic>>> fetchRecords(String path, {Map<String, String>? query}) =>
       api.getList(path, query: {'pageSize': '100', ...?query});
 

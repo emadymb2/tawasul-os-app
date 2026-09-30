@@ -2,13 +2,18 @@ import 'package:flutter/material.dart';
 
 import '../core/l10n.dart';
 import '../core/models.dart';
+import '../core/session.dart';
+import '../data/console_repository.dart';
 import '../theme/app_theme.dart';
 import '../widgets/tawasul_widgets.dart';
+import 'chat_pages.dart';
 import 'student_pages.dart';
 
 Widget parentContent({
   required int index,
   required ConsoleSnapshot snapshot,
+  required ConsoleRepository repository,
+  required AuthUser user,
   required void Function(String childId) onSelectChild,
 }) {
   final picker = ChildPicker(snapshot: snapshot, onSelectChild: onSelectChild);
@@ -27,6 +32,8 @@ Widget parentContent({
       return ParentFees(snapshot: snapshot);
     case 7:
       return ParentMessages(snapshot: snapshot);
+    case 8:
+      return ChatListScreen(repository: repository, user: user);
     default:
       return Column(children: [ParentDashboard(snapshot: snapshot, onSelectChild: onSelectChild), picker]);
   }

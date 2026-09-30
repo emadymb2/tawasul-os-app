@@ -2,9 +2,12 @@ import 'package:flutter/material.dart';
 
 import '../core/l10n.dart';
 import '../core/models.dart';
+import '../core/session.dart';
+import '../data/console_repository.dart';
 import '../widgets/tawasul_widgets.dart';
+import 'chat_pages.dart';
 
-Widget staffContent({required int index, required ConsoleSnapshot snapshot}) {
+Widget staffContent({required int index, required ConsoleSnapshot snapshot, required ConsoleRepository repository, required AuthUser user}) {
   switch (index) {
     case 1:
       return StaffStudents(snapshot: snapshot);
@@ -12,6 +15,8 @@ Widget staffContent({required int index, required ConsoleSnapshot snapshot}) {
       return StaffClasses(snapshot: snapshot);
     case 3:
       return StaffMessages(snapshot: snapshot);
+    case 4:
+      return ChatListScreen(repository: repository, user: user);
     default:
       return StaffDashboard(snapshot: snapshot);
   }

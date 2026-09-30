@@ -7,6 +7,7 @@ import '../data/console_repository.dart';
 import '../theme/app_theme.dart';
 import '../widgets/tawasul_widgets.dart';
 import 'account_pages.dart';
+import 'chat_pages.dart';
 import 'learning_pages.dart';
 import 'admin_pages.dart';
 import 'parent_pages.dart';
@@ -115,10 +116,11 @@ class _ConsoleScreenState extends State<ConsoleScreen> {
           ConsoleTab(3, strings.isArabic ? 'الدروس' : 'Lessons', Icons.edit_note_outlined, ['/lessons']),
           ConsoleTab(9, strings.isArabic ? 'الاختبارات' : 'Tests', Icons.quiz_outlined, ['/lessons', '/markbook-columns']),
           ConsoleTab(7, strings.messages, Icons.mail_outline, ['/messages']),
+          ConsoleTab(8, strings.chat, Icons.chat_bubble_outline, ['/chats']),
           ConsoleTab(4, strings.students, Icons.groups_outlined, ['/class-enrolments'], true),
           ConsoleTab(5, strings.grades, Icons.grade_outlined, ['/markbook-entries'], true),
           ConsoleTab(6, strings.behaviour, Icons.emoji_people_outlined, ['/behaviour'], true),
-          ConsoleTab(8, strings.more, Icons.more_horiz, teacherExtraPages.map((page) => page.path).toList(), true),
+          ConsoleTab(10, strings.more, Icons.more_horiz, teacherExtraPages.map((page) => page.path).toList(), true),
         ];
       case ConsoleRole.parent:
         return [
@@ -130,6 +132,7 @@ class _ConsoleScreenState extends State<ConsoleScreen> {
           ConsoleTab(5, strings.behaviour, Icons.emoji_people_outlined, ['/behaviour']),
           ConsoleTab(6, strings.fees, Icons.receipt_long_outlined, ['/invoices']),
           ConsoleTab(7, strings.messages, Icons.mail_outline, ['/messages']),
+          ConsoleTab(8, strings.chat, Icons.chat_bubble_outline, ['/chats']),
         ];
       case ConsoleRole.student:
         return [
@@ -138,6 +141,7 @@ class _ConsoleScreenState extends State<ConsoleScreen> {
           ConsoleTab(2, strings.homework, Icons.menu_book_outlined, ['/lessons']),
           ConsoleTab(7, strings.isArabic ? 'الاختبارات' : 'Tests', Icons.quiz_outlined, ['/markbook-columns', '/planner-entry-homeworks']),
           ConsoleTab(6, strings.messages, Icons.mail_outline, ['/messages']),
+          ConsoleTab(8, strings.chat, Icons.chat_bubble_outline, ['/chats']),
           ConsoleTab(3, strings.attendance, Icons.fact_check_outlined, ['/attendance'], true),
           ConsoleTab(4, strings.grades, Icons.grade_outlined, ['/markbook-entries'], true),
           ConsoleTab(5, strings.behaviour, Icons.emoji_people_outlined, ['/behaviour'], true),
@@ -148,6 +152,7 @@ class _ConsoleScreenState extends State<ConsoleScreen> {
           ConsoleTab(1, strings.students, Icons.groups_outlined, ['/class-enrolments']),
           ConsoleTab(2, strings.classes, Icons.class_outlined, ['/classes']),
           ConsoleTab(3, strings.messages, Icons.mail_outline, ['/messages']),
+          ConsoleTab(4, strings.chat, Icons.chat_bubble_outline, ['/chats']),
         ];
       case ConsoleRole.admin:
         return [
@@ -155,6 +160,7 @@ class _ConsoleScreenState extends State<ConsoleScreen> {
           ConsoleTab(1, strings.isArabic ? 'الأقسام' : 'Sections', Icons.apps_outlined),
           ConsoleTab(6, strings.isArabic ? 'الجداول' : 'Timetable', Icons.calendar_month_outlined),
           ConsoleTab(4, strings.messages, Icons.mail_outline, ['/messages']),
+          ConsoleTab(5, strings.chat, Icons.chat_bubble_outline, ['/chats']),
         ];
     }
   }
@@ -201,6 +207,7 @@ class _ConsoleScreenState extends State<ConsoleScreen> {
     switch (_user.role) {
       case ConsoleRole.teacher:
         if (pageIndex == 9) return teacherLearningHub(snapshot: snapshot, repository: widget.repository);
+        if (pageIndex == 8) return ChatListScreen(repository: widget.repository, user: _user);
         return teacherContent(
           index: pageIndex,
           snapshot: snapshot,
@@ -217,14 +224,19 @@ class _ConsoleScreenState extends State<ConsoleScreen> {
         return parentContent(
           index: pageIndex,
           snapshot: snapshot,
+          repository: widget.repository,
+          user: _user,
           onSelectChild: _selectChild,
         );
       case ConsoleRole.student:
         if (pageIndex == 7) return studentLearningHub(snapshot: snapshot, repository: widget.repository, user: _user);
+        if (pageIndex == 8) return ChatListScreen(repository: widget.repository, user: _user);
         return studentContent(index: pageIndex, snapshot: snapshot, repository: widget.repository, user: _user);
       case ConsoleRole.staff:
-        return staffContent(index: pageIndex, snapshot: snapshot);
+        if (pageIndex == 4) return ChatListScreen(repository: widget.repository, user: _user);
+        return staffContent(index: pageIndex, snapshot: snapshot, repository: widget.repository, user: _user);
       case ConsoleRole.admin:
+        if (pageIndex == 5) return ChatListScreen(repository: widget.repository, user: _user);
         return adminContent(index: pageIndex, snapshot: snapshot, repository: widget.repository);
     }
   }

@@ -6,6 +6,7 @@ import '../core/session.dart';
 import '../data/console_repository.dart';
 import '../theme/app_theme.dart';
 import '../widgets/tawasul_widgets.dart';
+import 'chat_pages.dart';
 import 'teacher_more_pages.dart';
 import 'calendar_pages.dart';
 import 'learning_pages.dart';
@@ -43,6 +44,8 @@ Widget teacherContent({
     case 7:
       return TeacherMessages(snapshot: snapshot);
     case 8:
+      return ChatListScreen(repository: repository, user: user);
+    case 10:
       return TeacherMore(repository: repository);
     default:
       return TeacherDashboard(snapshot: snapshot, repository: repository, onOpen: onOpen ?? (_, __) {});
