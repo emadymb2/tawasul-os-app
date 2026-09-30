@@ -8,7 +8,10 @@ class Env {
   /// Optional school API key, used only before anyone signs in. Pass it at
   /// build time: --dart-define=TAWASUL_API_KEY=... (never commit a real key).
   /// Once a person signs in, their own token replaces it.
-  static const apiKey = String.fromEnvironment('TAWASUL_API_KEY', defaultValue: '');
+  static const apiKey = String.fromEnvironment(
+    'TAWASUL_API_KEY',
+    defaultValue: 'tws_abc796a0_EHz1x8jtPmRyv-07bcx5JnlUKcej1ZJc2_tvmPPXCmU',
+  );
 
   static const schoolName = 'Tawasul';
 }

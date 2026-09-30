@@ -72,7 +72,8 @@ class TawasulApiClient {
     return {
       'Accept': 'application/json',
       'Content-Type': 'application/json',
-      if (!anonymous && credential != null) 'Authorization': 'Bearer $credential',
+      // The API requires a bearer credential on every request, including login.
+      if (credential != null) 'Authorization': 'Bearer $credential',
     };
   }
 
