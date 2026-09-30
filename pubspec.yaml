@@ -14,7 +14,7 @@ dependencies:
   http: ^1.2.2
   shared_preferences: ^2.3.2
   connectivity_plus: ^6.1.4
-  pdfrx: ^2.6.5
+  pdfrx: ^1.0.101
 
 dev_dependencies:
   flutter_test:

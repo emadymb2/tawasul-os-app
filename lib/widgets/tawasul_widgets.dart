@@ -238,13 +238,13 @@ class MetricTile extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.start,
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
-          Text(data.title, style: TextStyle(color: text.withValues(alpha: 0.85), fontSize: 13, fontWeight: FontWeight.w700)),
+          Text(data.title, style: TextStyle(color: text.withOpacity(0.85), fontSize: 13, fontWeight: FontWeight.w700)),
           Text(data.value, style: TextStyle(color: text, fontSize: 34, fontWeight: FontWeight.w900, height: 1.05)),
           if (data.hint.isNotEmpty)
             Text(data.hint,
                 maxLines: 1,
                 overflow: TextOverflow.ellipsis,
-                style: TextStyle(color: text.withValues(alpha: 0.75), fontSize: 11, fontWeight: FontWeight.w600)),
+                style: TextStyle(color: text.withOpacity(0.75), fontSize: 11, fontWeight: FontWeight.w600)),
         ],
       ),
     );
