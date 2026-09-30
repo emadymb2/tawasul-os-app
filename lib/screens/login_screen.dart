@@ -57,8 +57,10 @@ class _LoginScreenState extends State<LoginScreen> {
         return strings.loginDisabled;
       case 'too-many-attempts':
         return strings.tooManyAttempts;
-      default:
+      case 'connection-failed':
         return strings.networkError;
+      default:
+        return code;
     }
   }
 

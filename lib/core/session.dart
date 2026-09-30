@@ -133,9 +133,11 @@ class SessionController extends ChangeNotifier {
       if (error.statusCode == 401) return 'wrong-credentials';
       if (error.statusCode == 403) return 'login-disabled';
       if (error.statusCode == 429) return 'too-many-attempts';
-      return 'network';
-    } catch (_) {
-      return 'network';
+      if (error.statusCode == null) return 'network';
+      return 'Server error: ${error.statusCode}';
+    } catch (e) {
+      // Surface the actual exception for debugging network/parse errors
+      return 'connection-failed';
     }
   }
 
