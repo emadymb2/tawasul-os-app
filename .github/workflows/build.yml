@@ -44,6 +44,7 @@ jobs:
       - name: Build APK
         run: |
           flutter build apk --release \
+            --android-skip-build-dependency-validation \
             --dart-define=TAWASUL_BASE_URL=https://tos.fiksutiliratkaisut.fi/1/tawasul-os/ \
             --dart-define=TAWASUL_API_KEY=${{ secrets.TAWASUL_API_KEY }}
 
