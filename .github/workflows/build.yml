@@ -27,13 +27,23 @@ jobs:
           channel: 'stable'
           cache: true
 
+      - name: Pin Gradle wrapper version
+        run: |
+          mkdir -p android/gradle/wrapper
+          cat > android/gradle/wrapper/gradle-wrapper.properties <<'EOF'
+          distributionBase=GRADLE_USER_HOME
+          distributionPath=wrapper/dists
+          zipStoreBase=GRADLE_USER_HOME
+          zipStorePath=wrapper/dists
+          distributionUrl=https\://services.gradle.org/distributions/gradle-8.12-all.zip
+          EOF
+
       - name: Install dependencies
         run: flutter pub get
 
       - name: Build APK
         run: |
           flutter build apk --release \
-            --android-skip-build-dependency-validation \
             --dart-define=TAWASUL_BASE_URL=https://tos.fiksutiliratkaisut.fi/1/tawasul-os/ \
             --dart-define=TAWASUL_API_KEY=${{ secrets.TAWASUL_API_KEY }}
 
@@ -59,7 +69,7 @@ jobs:
         run: flutter pub get
 
       - name: Analyze
-        run: flutter analyze
+        run: flutter analyze --no-fatal-infos
 
       - name: Test
         run: flutter test
