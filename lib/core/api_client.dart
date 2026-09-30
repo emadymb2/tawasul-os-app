@@ -69,12 +69,17 @@ class TawasulApiClient {
 
   Map<String, String> _headers({bool anonymous = false}) {
     final credential = _token ?? (apiKey.isNotEmpty ? apiKey : null);
-    return {
+    final headers = {
       'Accept': 'application/json',
       'Content-Type': 'application/json',
-      // The API requires a bearer credential on every request, including login.
-      if (credential != null) 'Authorization': 'Bearer $credential',
     };
+    if (credential != null) {
+      // Some hosts strip the Authorization header; X-Api-Key is the
+      // documented fallback that the server's Request::getBearerToken() reads.
+      headers['X-Api-Key'] = credential;
+      headers['Authorization'] = 'Bearer $credential';
+    }
+    return headers;
   }
 
   // ---------------------------------------------------------------- auth ----
