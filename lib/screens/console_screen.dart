@@ -291,7 +291,7 @@ class _ConsoleScreenState extends State<ConsoleScreen> {
           ),
           child: NavigationBar(
             height: 68,
-            selectedIndex: selected < 0 ? null : selected,
+            selectedIndex: selected < 0 ? 0 : selected,
             onDestinationSelected: (value) => setState(() {
               _index = tabs[value].index;
               _section = 0;
